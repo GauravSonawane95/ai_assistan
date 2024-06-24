@@ -6,35 +6,35 @@ import { GoogleGenerativeAI} from '@google/generative-ai';
   styleUrls: ['./blueai.component.scss']
 })
 export class BlueaiComponent {
-   API_KEY:any= "AIzaSyCjB7ylHTSf9Mioik8VqAj0JHFoboZWF_M";
+   
 
 // Access your API key as an environment variable (see "Set up your API key" above)
- genAI = new GoogleGenerativeAI(this.API_KEY);
- prompt:any=[];
- sender:string[]=[];
- messages: { text: string, sender: 'user' | 'ai' }[] = [
-  { text: 'Hello! How can I assist you today?', sender: 'ai' }
-];
+//  messages: { text: string, sender: 'user' | 'ai' }[] = [
+//   { text: 'Hello! How can I assist you today?', sender: 'ai' }
+// ];
+API_KEY:any = "AIzaSyCjB7ylHTSf9Mioik8VqAj0JHFoboZWF_M";
+genAI = new GoogleGenerativeAI(this.API_KEY);
+prompt: string = '';
+main = {
+  sender: [] as { text: string, sender: string }[],
+  gptreply: [] as { text: string, sender: string }[]
+};
 
-gptreply:string[]=[];
+async run() {
+  // Push user prompt to sender array
+  this.main.sender.push({ text: this.prompt, sender: 'user' });
 
- async run() {
-
-  const genAI = new GoogleGenerativeAI(this.API_KEY);
-  // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+  const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   const result = await model.generateContent(this.prompt);
   const response = await result.response;
-  const messages = response.text();
-  console.log(messages);
-  this.gptreply.push(messages);
-  this.sender.push(this.prompt);
-  
+  const aiReply = response.text();
 
+  // Push AI reply to gptreply array
+  this.main.gptreply.push({ text: aiReply, sender: 'ai' });
+
+  // Clear prompt after sending
+  this.prompt = '';
 }
-
-
 }
-
 
 
