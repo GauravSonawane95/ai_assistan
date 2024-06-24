@@ -1,35 +1,32 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
+import { DomSanitizer,SafeHtml } from '@angular/platform-browser';
 @Pipe({
   name: 'formatting'
 })
 export class FormattingPipe implements PipeTransform {
-  transform(value: string): any {
-    if (!value) return '';
+ 
+  constructor(private sanitizer: DomSanitizer) {}
 
-    // Convert newline characters to <br> tags
-    let formattedText = value.replace(/\n/g, '<br/>');
+  transform(value: string): SafeHtml {
+    if (!value) {
+      return value;
+    }
 
-    // Apply text formatting based on markers
-    formattedText = this.applyTextFormatting(formattedText);
+    let formattedText = value;
 
-    return formattedText;
+    // Replace "## " with <h1> tags
+    formattedText = formattedText.replace(/^## (.+)$/gm, '<h1>$1</h1>');
+
+    // Replace "**" with <h2> tags
+    formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<h2>$1</h2>');
+
+    // Replace "* **" with <p> tags
+    formattedText = formattedText.replace(/^\* \*\*(.+?)\*\*$/gm, '<p>$1</p>');
+
+    // Ensure paragraphs are separated by <br> tags
+    formattedText = formattedText.replace(/\n/g, '<br>');
+
+    // Sanitize the formatted HTML
+    return this.sanitizer.bypassSecurityTrustHtml(formattedText);
   }
-
-  private applyTextFormatting(text: string): string {
-    if (text.startsWith('##')) {
-      return `<h2>${text.substring(2)}</h2>`;
-    }
-
-    if (text.startsWith('**') && text.endsWith('**')) {
-      return `<h3>${text.substring(2, text.length - 2)}</h3>`;
-    }
-
-    if (text.startsWith('* **') && text.endsWith('* **')) {
-      return `<p>${text.substring(3, text.length - 3)}</p>`;
-    }
-
-    return text; // Return original text if no transformation applies
-  }
-
 }

@@ -12,28 +12,25 @@ export class BlueaiComponent {
 //  messages: { text: string, sender: 'user' | 'ai' }[] = [
 //   { text: 'Hello! How can I assist you today?', sender: 'ai' }
 // ];
-API_KEY:any = "AIzaSyCjB7ylHTSf9Mioik8VqAj0JHFoboZWF_M";
+API_KEY: any = "AIzaSyCjB7ylHTSf9Mioik8VqAj0JHFoboZWF_M";
 genAI = new GoogleGenerativeAI(this.API_KEY);
-prompt: string = '';
+prompt: any = '';
+
 main = {
-  sender: [] as { text: string, sender: string }[],
-  gptreply: [] as { text: string, sender: string }[]
+  sender: [{ text: "Here, You can see your prompt" }],
+  gptreply: [{ text: "Hello, How can I assist you." }]
 };
 
 async run() {
-  // Push user prompt to sender array
-  this.main.sender.push({ text: this.prompt, sender: 'user' });
-
   const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   const result = await model.generateContent(this.prompt);
   const response = await result.response;
-  const aiReply = response.text();
+  const messages = response.text();
 
-  // Push AI reply to gptreply array
-  this.main.gptreply.push({ text: aiReply, sender: 'ai' });
+  this.main.sender.push({ text: this.prompt });
+  this.main.gptreply.push({ text: messages });
 
-  // Clear prompt after sending
-  this.prompt = '';
+  this.prompt = ''; // Clear the prompt
 }
 }
 
