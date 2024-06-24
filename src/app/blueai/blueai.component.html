@@ -8,11 +8,11 @@
         <ng-container *ngFor="let message of main.sender; let i = index">
           <!-- User message -->
           <div *ngIf="i < main.gptreply.length" class="self-end bg-white shadow-md p-4 rounded-lg max-w-xl">
-            <p class="text-gray-600"><strong>Me:</strong><br> {{ message.text }}</p>
+            <p class="text-gray-600"><strong>Me:</strong><br> {{ message.text  }}</p>
           </div>
           <!-- AI message -->
           <div *ngIf="i < main.gptreply.length" class="self-start bg-gray-600 text-white shadow-md p-4 rounded-lg max-w-xs">
-            <p class="text-white"><strong>Jarvis:</strong><br> {{ main.gptreply[i].text }}</p>
+            <p class="text-white"><strong>Jarvis:</strong><br> {{ main.gptreply[i].text  }}</p>
           </div>
         </ng-container>
       </div>
@@ -29,7 +29,7 @@
         />
         <button
           (click)="run()"
-          class="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          class="bg-blue-600 text-white p-3 max-w-xs rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
         >
           Send
         </button>
