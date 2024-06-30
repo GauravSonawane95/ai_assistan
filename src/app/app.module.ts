@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BlueaiComponent } from './blueai/blueai.component';
 import { FormattingPipe } from './formatting.pipe';
+import { GoogleGenerativeAiService } from './google-generative-ai.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { FormattingPipe } from './formatting.pipe';
     
  
   ],
-  providers: [FormattingPipe],
+  providers: [FormattingPipe,GoogleGenerativeAiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -18,17 +18,37 @@ prompt: any = '';
 
 main = {
   sender: [{ text: "Here, You can see your prompt" }],
-  gptreply: [{ text: "Hello, How can I assist you." }]
+  geminireply: [{ text: "Hello, How can I assist you." }]
 };
 
 async run() {
+  // The Gemini 1.5 models are versatile and work with multi-turn conversations (like chat)
   const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  const result = await model.generateContent(this.prompt);
+
+  const chat = model.startChat({
+    history: [
+      {
+        role: "user",
+        parts: [{ text: "Hello, I have 2 dogs in my house." }],
+      },
+      {
+        role: "model",
+        parts: [{ text: "Great to meet you. What would you like to know?" }],
+      },
+    ],
+    generationConfig: {
+      maxOutputTokens: 100,
+    },
+  });
+
+  const msg = this.prompt;
+
+  const result = await chat.sendMessage(msg);
   const response = await result.response;
-  const messages = response.text();
+  const text = await response.text();
 
   this.main.sender.push({ text: this.prompt });
-  this.main.gptreply.push({ text: messages });
+  this.main.geminireply.push({ text: text });
 
   this.prompt = ''; // Clear the prompt
 }
